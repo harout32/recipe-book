@@ -1,11 +1,13 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { AppRouteModule } from './routeModule/app-route.module';
 
+import { ServerService } from './server.service';
 import { IngredientsService } from './shopping-list/ingredients.service';
 import { RecipesService } from "./recipes/recipes.service";
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -39,10 +41,11 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
     BrowserModule,
     AppRouteModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
     
   ],
-  providers: [IngredientsService,RecipesService],
+  providers: [IngredientsService,RecipesService,ServerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

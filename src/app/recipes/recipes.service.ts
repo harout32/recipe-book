@@ -1,3 +1,8 @@
+import { Observable} from 'rxjs/Observable';
+import { Headers, Http, Response } from '@angular/http';
+import 'rxjs/Rx';
+
+import { ServerService } from '../server.service';
 import { IngredientsService } from '../shopping-list/ingredients.service';
 import { Ingredient } from '../shared/ingredient.model';
 import { Injectable } from '@angular/core';
@@ -8,7 +13,9 @@ import { Subject } from "rxjs/Subject";
  
 export class RecipesService {
 
-    constructor(private inService:IngredientsService){}
+    constructor(private inService:IngredientsService,
+    private serverService:ServerService){}
+    
     onRecipeChanged = new Subject<Recipe[]>();
 
     private recipes :Recipe [] = [
@@ -43,11 +50,8 @@ export class RecipesService {
     getRecipe(){
         return this.recipes.slice();
     }
-
     toShopping(ingredients: Ingredient[]){
-
         this.inService.addIngredients(ingredients);
-
     }
     getSelectedRecipe(index:number){
         return this.recipes.slice()[index];
@@ -64,6 +68,25 @@ export class RecipesService {
         this.recipes.splice(id,1);
         this.onRecipeChanged.next(this.recipes.slice())
     }
-
+    //Http Requests Hundler
+    saveRecipesReq(){
+        this.serverService.save(this.recipes).subscribe(
+            (response:Response) => {
+                console.log(response);
+            }
+        )
+    }
+    fetchRecipeReq(){
+       this.serverService.fetch().subscribe(
+           (recipes) => {
+               this.recipes = recipes;
+               this.onRecipeChanged.next(this.recipes.slice());
+           },
+           (error) => {
+               console.log(error);
+               
+           }
+       )
+    }
 
 }
